@@ -1,0 +1,48 @@
+#pragma once
+
+#include "Resource.h"
+
+#include <cstdio>
+#include <cstdarg>
+
+namespace fx
+{
+
+inline void on(const std::string& event, EventHandler handler)
+{
+    if (auto* ctx = detail::g_ctx)
+        ctx->on(event, std::move(handler));
+}
+
+inline void onTick(TickHandler handler)
+{
+    if (auto* ctx = detail::g_ctx)
+        ctx->onTick(std::move(handler));
+}
+
+template<typename... TArgs>
+inline void trace(const char* fmt, TArgs&&... args)
+{
+    if (auto* ctx = detail::g_ctx)
+        ctx->trace(fmt, std::forward<TArgs>(args)...);
+}
+
+inline void emit(const std::string& event, const std::vector<std::string>& rawArgs = {})
+{
+    if (auto* ctx = detail::g_ctx)
+        ctx->emit(event, rawArgs);
+}
+
+inline void emitNet(const std::string& event, int target, const std::vector<std::string>& rawArgs = {})
+{
+    if (auto* ctx = detail::g_ctx)
+        ctx->emitNet(event, target, rawArgs);
+}
+
+inline void onCommand(const std::string& command, CommandHandler handler)
+{
+    if (auto* ctx = detail::g_ctx)
+        ctx->onCommand(command, std::move(handler));
+}
+
+}
