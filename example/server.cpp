@@ -1,8 +1,8 @@
-#include <SDK.h>
+#include <resource_sdk/SDK.h>
 #include <memory>
 #include <unordered_map>
 
-CPP_SDK("example")
+FXCPP_RESOURCE
 {
     auto pending = std::make_shared<std::unordered_map<std::string, std::string>>();
     auto players = std::make_shared<std::unordered_map<std::string, std::string>>();

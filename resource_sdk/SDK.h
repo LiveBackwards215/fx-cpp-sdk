@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Resource.h"
-
-#include <cstdio>
-#include <cstdarg>
+#include "Natives.h"
 
 namespace fx
 {

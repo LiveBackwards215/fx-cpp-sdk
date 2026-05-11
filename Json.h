@@ -49,17 +49,17 @@ public:
         append(key, quote(value));
         return *this;
     }
-    JsonObj& set(std::string_view key, const std::string& value) { return set(key, std::string_view(value)); }
-    JsonObj& set(std::string_view key, const char* value) { return set(key, std::string_view(value)); }
+    JsonObj& set(std::string_view key, const std::string& value) { return set(key, std::string_view(value)) ; }
+    JsonObj& set(std::string_view key, const char* value) { return set(key, std::string_view(value)) ; }
 
     JsonObj& set(std::string_view key, int64_t value)
     {
         append(key, std::to_string(value));
         return *this;
     }
-    JsonObj& set(std::string_view key, int value) { return set(key, static_cast<int64_t>(value)); }
-    JsonObj& set(std::string_view key, uint32_t v) { return set(key, static_cast<int64_t>(v)); }
-    JsonObj& set(std::string_view key, uint64_t v) { return set(key, static_cast<int64_t>(static_cast<int64_t>(v))); }
+    JsonObj& set(std::string_view key, int value) { return set(key, static_cast<int64_t>(value)) ; }
+    JsonObj& set(std::string_view key, uint32_t v) { return set(key, static_cast<int64_t>(v)) ; }
+    JsonObj& set(std::string_view key, uint64_t v) { return set(key, static_cast<int64_t>(static_cast<int64_t>(v))) ; }
 
     JsonObj& set(std::string_view key, double value)
     {
@@ -126,15 +126,15 @@ struct Value
     {
         return kind == Kind::Number ? std::strtod(scalar.c_str(), nullptr) : def;
     }
-    int asInt(int def = 0) const { return static_cast<int>(asNum(def)); }
+    int asInt(int def = 0) const { return static_cast<int>(asNum(def)) ; }
     bool asBool(bool def = false) const
     {
         if (kind == Kind::Bool) return scalar == "true";
         return def;
     }
-    bool isNull() const { return kind == Kind::Null; }
+    bool isNull() const { return kind == Kind::Null ; }
 
-    bool has(const std::string& key) const { return fields.count(key) > 0; }
+    bool has(const std::string& key) const { return fields.count(key) > 0 ; }
     const Value& operator[](const std::string& key) const
     {
         static const Value nil{};
@@ -142,7 +142,7 @@ struct Value
         return it != fields.end() ? it->second : nil;
     }
 
-    size_t size() const { return children.size(); }
+    size_t size() const { return children.size() ; }
     const Value& at(size_t i) const
     {
         static const Value nil{};
@@ -158,8 +158,8 @@ struct Parser
     std::string_view src;
     size_t pos = 0;
 
-    char peek() const { return pos < src.size() ? src[pos] : '\0'; }
-    char consume() { return pos < src.size() ? src[pos++] : '\0'; }
+    char peek() const { return pos < src.size() ? src[pos] : '\0' ; }
+    char consume() { return pos < src.size() ? src[pos++] : '\0' ; }
 
     void skipWs()
     {
@@ -232,7 +232,7 @@ struct Parser
             v.kind = Value::Kind::Object;
             consume();
             skipWs();
-            if (peek() == '}') { consume(); return v; }
+            if (peek() == '}') { consume(); return v ; }
             while (true)
             {
                 skipWs();
@@ -252,7 +252,7 @@ struct Parser
             v.kind = Value::Kind::Array;
             consume();
             skipWs();
-            if (peek() == ']') { consume(); return v; }
+            if (peek() == ']') { consume(); return v ; }
             while (true)
             {
                 v.children.push_back(parseValue());

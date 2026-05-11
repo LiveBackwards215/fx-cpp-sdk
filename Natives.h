@@ -13,14 +13,14 @@ namespace fx::natives
 
 namespace detail
 {
-    inline void appendArg(std::vector<std::string>& args, const char* v) { args.push_back(json::quote(v)); }
-    inline void appendArg(std::vector<std::string>& args, std::string v) { args.push_back(json::quote(v)); }
-    inline void appendArg(std::vector<std::string>& args, int v) { args.push_back(std::to_string(v)); }
-    inline void appendArg(std::vector<std::string>& args, uint32_t v) { args.push_back(std::to_string(v)); }
-    inline void appendArg(std::vector<std::string>& args, int64_t v) { args.push_back(std::to_string(v)); }
-    inline void appendArg(std::vector<std::string>& args, float v) { char b[32]; snprintf(b,32,"%g",v); args.push_back(b); }
-    inline void appendArg(std::vector<std::string>& args, double v) { char b[32]; snprintf(b,32,"%g",v); args.push_back(b); }
-    inline void appendArg(std::vector<std::string>& args, bool v) { args.push_back(v ? "true" : "false"); }
+    inline void appendArg(std::vector<std::string>& args, const char* v) { args.push_back(json::quote(v)) }
+    inline void appendArg(std::vector<std::string>& args, std::string v) { args.push_back(json::quote(v)) }
+    inline void appendArg(std::vector<std::string>& args, int v) { args.push_back(std::to_string(v)) }
+    inline void appendArg(std::vector<std::string>& args, uint32_t v) { args.push_back(std::to_string(v)) }
+    inline void appendArg(std::vector<std::string>& args, int64_t v) { args.push_back(std::to_string(v)) }
+    inline void appendArg(std::vector<std::string>& args, float v) { char b[32]; snprintf(b,32,"%g",v); args.push_back(b) }
+    inline void appendArg(std::vector<std::string>& args, double v) { char b[32]; snprintf(b,32,"%g",v); args.push_back(b) }
+    inline void appendArg(std::vector<std::string>& args, bool v) { args.push_back(v ? "true" : "false") }
 }
 
 template<typename... TArgs>
@@ -54,7 +54,7 @@ inline json::Value invokeRaw(uint64_t hash, TArgs&&... args)
     while (!got && conn.receive(incoming))
     {
         json::Value msg;
-        try { msg = json::parse(incoming); } catch (...) { continue; }
+        try { msg = json::parse(incoming) } catch (...) { continue }
 
         const std::string t = msg["t"].asStr();
 
@@ -68,7 +68,7 @@ inline json::Value invokeRaw(uint64_t hash, TArgs&&... args)
                 ctx->pendingNatives.erase(it);
             }
         }
-        else if (t == "tick") { ctx->dispatchTick(); }
+        else if (t == "tick") { ctx->dispatchTick() }
         else if (t == "event")
         {
             ctx->dispatchEvent(msg["event"].asStr(), msg["args"], msg["source"].asStr("-1"));

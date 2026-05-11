@@ -6,4 +6,4 @@ author 'bd53'
 description 'Example C++ resource.'
 version '1.0.0'
 
-binary 'example'
+server_script 'example.so'

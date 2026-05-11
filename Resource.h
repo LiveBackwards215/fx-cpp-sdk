@@ -25,26 +25,23 @@ class EventArgs
 {
 public:
     explicit EventArgs(const json::Value& arr) : m_arr(arr) {}
-
-    size_t size() const { return m_arr.size(); }
-
+    size_t size() const { return m_arr.size() }
     template<typename T> T get(size_t i) const;
-
-    std::string str(size_t i) const { return m_arr.at(i).asStr(); }
-    int integer(size_t i) const { return m_arr.at(i).asInt(); }
-    double number(size_t i) const { return m_arr.at(i).asNum(); }
-    bool boolean(size_t i) const { return m_arr.at(i).asBool(); }
-    bool isNull(size_t i) const { return m_arr.at(i).isNull(); }
+    std::string str(size_t i) const { return m_arr.at(i).asStr() }
+    int integer(size_t i) const { return m_arr.at(i).asInt() }
+    double number(size_t i) const { return m_arr.at(i).asNum() }
+    bool boolean(size_t i) const { return m_arr.at(i).asBool() }
+    bool isNull(size_t i) const { return m_arr.at(i).isNull() }
 
 private:
     const json::Value& m_arr;
 };
 
-template<> inline std::string EventArgs::get<std::string>(size_t i) const { return str(i); }
-template<> inline int EventArgs::get<int>(size_t i) const { return integer(i); }
-template<> inline double EventArgs::get<double>(size_t i) const { return number(i); }
-template<> inline float EventArgs::get<float>(size_t i) const { return static_cast<float>(number(i)); }
-template<> inline bool EventArgs::get<bool>(size_t i) const { return boolean(i); }
+template<> inline std::string EventArgs::get<std::string>(size_t i) const { return str(i) }
+template<> inline int EventArgs::get<int>(size_t i) const { return integer(i) }
+template<> inline double EventArgs::get<double>(size_t i) const { return number(i) }
+template<> inline float EventArgs::get<float>(size_t i) const { return static_cast<float>(number(i)) }
+template<> inline bool EventArgs::get<bool>(size_t i) const { return boolean(i) }
 
 using EventHandler = std::function<void(const std::string& source, EventArgs)>;
 using TickHandler = std::function<void()>;
@@ -106,8 +103,8 @@ public:
         for (auto& h : it->second) h(source, args);
     }
 
-    Connection& connection() { return m_conn; }
-    const std::string& resourceName() const { return m_name; }
+    Connection& connection() { return m_conn }
+    const std::string& resourceName() const { return m_name }
 
     void dispatchTick()
     {
@@ -139,7 +136,7 @@ namespace detail
     inline ResourceContext* g_ctx = nullptr;
 }
 
-inline ResourceContext* GetContext() { return detail::g_ctx; }
+inline ResourceContext* GetContext() { return detail::g_ctx }
 
 inline void RunLoop(ResourceContext& ctx)
 {
@@ -149,8 +146,8 @@ inline void RunLoop(ResourceContext& ctx)
     while (conn.receive(json))
     {
         fx::json::Value msg;
-        try { msg = fx::json::parse(json); }
-        catch (...) { continue; }
+        try { msg = fx::json::parse(json) }
+        catch (...) { continue }
 
         const std::string t = msg["t"].asStr();
 
@@ -194,7 +191,7 @@ inline void RunLoop(ResourceContext& ctx)
         { \
             bool ok = false; \
             for (int _attempt = 0; _attempt < 20; ++_attempt) { \
-                if (conn.connect("127.0.0.1", port)) { ok = true; break; } \
+                if (conn.connect("127.0.0.1", port)) { ok = true; break } \
                 fprintf(stderr, "[fivem-cpp-sdk] Waiting for bridge on port %u...\n", port); \
                 usleep(500000); \
             } \
@@ -208,7 +205,7 @@ inline void RunLoop(ResourceContext& ctx)
         conn.send(fx::json::JsonObj().set("t", "hello").set("resource", resource_name).build()); \
         { \
             std::string ack; \
-            if (!conn.receive(ack)) { fprintf(stderr, "[fivem-cpp-sdk] No ack.\n"); return 1; } \
+            if (!conn.receive(ack)) { fprintf(stderr, "[fivem-cpp-sdk] No ack.\n"); return 1 } \
         } \
         main_impl(ctx); \
         fx::RunLoop(ctx); \
