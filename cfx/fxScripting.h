@@ -27,7 +27,6 @@ class IScriptBuffer : public fxIBase
 {
 public:
     NS_DECLARE_STATIC_IID_ACCESSOR(IID_IScriptBuffer)
-
     NS_IMETHOD_(char*) GetBytes() = 0;
     NS_IMETHOD_(uint32_t) GetLength() = 0;
 };

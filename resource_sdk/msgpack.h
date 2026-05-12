@@ -56,6 +56,23 @@ struct Reader
         return s;
     }
 
+    json::Value readExt(uint32_t dataLen)
+    {
+        int8_t type = static_cast<int8_t>(u8());
+        json::Value v;
+        if (type == 10) // function reference
+        {
+            v.kind = json::Value::Kind::FuncRef;
+            v.scalar = str(dataLen);
+        }
+        else
+        {
+            if (p + dataLen > end) throw std::runtime_error("msgpack: truncated");
+            p += dataLen;
+        }
+        return v;
+    }
+
     json::Value read()
     {
         uint8_t b = u8();
@@ -132,6 +149,15 @@ struct Reader
             for (uint32_t i = 0; i < n; ++i) v.children.push_back(read());
             return v;
         }
+
+        case 0xC7: return readExt(u8());
+        case 0xC8: return readExt(u16());
+        case 0xC9: return readExt(u32());
+        case 0xD4: return readExt(1);
+        case 0xD5: return readExt(2);
+        case 0xD6: return readExt(4);
+        case 0xD7: return readExt(8);
+        case 0xD8: return readExt(16);
 
         default:
             v.kind = json::Value::Kind::Null;
@@ -264,6 +290,23 @@ inline void writeValue(std::vector<uint8_t>& b, const json::Value& v)
         }
         for (auto& child : v.children)
             writeValue(b, child);
+        break;
+    }
+
+    case json::Value::Kind::FuncRef: {
+        size_t n = v.scalar.size();
+        if (n <= 255)
+        {
+            b.push_back(0xC7);
+            b.push_back(static_cast<uint8_t>(n));
+        }
+        else
+        {
+            b.push_back(0xC8);
+            writeU16(b, static_cast<uint16_t>(n));
+        }
+        b.push_back(10); // function reference ext type
+        b.insert(b.end(), v.scalar.begin(), v.scalar.end());
         break;
     }
 

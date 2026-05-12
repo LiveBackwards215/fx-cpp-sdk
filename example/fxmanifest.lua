@@ -6,4 +6,7 @@ author 'bd53'
 description 'Example C++ resource.'
 version '1.0.0'
 
-server_script 'example.so'
+server_scripts {
+    'example.so',
+    'server.lua',
+}

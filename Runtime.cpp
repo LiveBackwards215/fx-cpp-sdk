@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <cstring>
+#include <exception>
 #include <string>
 #include <string_view>
 
@@ -79,24 +80,46 @@ void OM_DECL Runtime::SetParentObject(void* obj)
 
 result_t OM_DECL Runtime::Tick()
 {
-    if (m_ctx)
+    if (!m_ctx) return FX_S_OK;
+    try
+    {
         m_ctx->dispatchTick();
+    }
+    catch (const std::exception& e)
+    {
+        m_ctx->trace("Unhandled exception in tick handler: %s\n", e.what());
+    }
+    catch (...)
+    {
+        m_ctx->trace("Unhandled non-standard exception in tick handler\n");
+    }
     return FX_S_OK;
 }
 
 result_t OM_DECL Runtime::TriggerEvent(char* eventName, char* argsSerialized, uint32_t serializedSize, char* sourceId)
 {
     if (!m_ctx || !eventName) return FX_S_OK;
-    fx::json::Value args = fx::msgpack::decode(argsSerialized, serializedSize);
-    if (args.kind != fx::json::Value::Kind::Array)
+    try
     {
-        fx::json::Value wrapper;
-        wrapper.kind = fx::json::Value::Kind::Array;
-        wrapper.children.push_back(std::move(args));
-        args = std::move(wrapper);
+        fx::json::Value args = fx::msgpack::decode(argsSerialized, serializedSize);
+        if (args.kind != fx::json::Value::Kind::Array)
+        {
+            fx::json::Value wrapper;
+            wrapper.kind = fx::json::Value::Kind::Array;
+            wrapper.children.push_back(std::move(args));
+            args = std::move(wrapper);
+        }
+        std::string src = sourceId ? sourceId : "-1";
+        m_ctx->dispatchEvent(eventName, args, src);
     }
-    std::string src = sourceId ? sourceId : "-1";
-    m_ctx->dispatchEvent(eventName, args, src);
+    catch (const std::exception& e)
+    {
+        m_ctx->trace("Unhandled exception in event '%s': %s\n", eventName, e.what());
+    }
+    catch (...)
+    {
+        m_ctx->trace("Unhandled non-standard exception in event '%s'\n", eventName);
+    }
     return FX_S_OK;
 }
 
@@ -111,7 +134,23 @@ result_t OM_DECL Runtime::CallRef(int32_t refIdx, char* argsSerialized, uint32_t
 {
     auto it = m_refs.find(refIdx);
     if (it == m_refs.end()) return FX_E_INVALIDARG;
-    std::vector<char> result = it->second(argsSerialized, argsSize);
+    std::vector<char> result;
+    try
+    {
+        result = it->second(argsSerialized, argsSize);
+    }
+    catch (const std::exception& e)
+    {
+        if (m_ctx)
+            m_ctx->trace("Unhandled exception in ref %d: %s\n", refIdx, e.what());
+        result = { static_cast<char>(0xC0) }; // msgpack nil
+    }
+    catch (...)
+    {
+        if (m_ctx)
+            m_ctx->trace("Unhandled non-standard exception in ref %d\n", refIdx);
+        result = { static_cast<char>(0xC0) };
+    }
     auto buf = fx::MakeNew<ScriptBuffer>(std::move(result));
     return buf->QueryInterface(IScriptBuffer::GetIID(), reinterpret_cast<void**>(retval));
 }
@@ -181,6 +220,21 @@ result_t OM_DECL Runtime::LoadFile(char* scriptFile)
     fx::MakeInterface(&runtimeHandler, CLSID_ScriptRuntimeHandler);
     m_ctx = new fx::ResourceContext(m_host, this, m_resourceName, runtimeHandler.GetRef(), [this](RefCallback cb) -> int32_t { return AddFuncRef(std::move(cb)); });
     fprintf(stderr, "[fx-cpp-sdk] Loaded C++ resource '%s'\n", m_resourceName.c_str());
-    initFn(m_ctx);
+    try
+    {
+        initFn(m_ctx);
+    }
+    catch (const std::exception& e)
+    {
+        fprintf(stderr, "[fx-cpp-sdk] Exception during init of '%s': %s\n", m_resourceName.c_str(), e.what());
+        m_ctx->trace("Exception during resource init: %s\n", e.what());
+        return FX_E_INVALIDARG;
+    }
+    catch (...)
+    {
+        fprintf(stderr, "[fx-cpp-sdk] Non-standard exception during init of '%s'\n", m_resourceName.c_str());
+        m_ctx->trace("Non-standard exception during resource init\n");
+        return FX_E_INVALIDARG;
+    }
     return FX_S_OK;
 }

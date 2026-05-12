@@ -112,7 +112,7 @@ inline std::string arrayOf(const std::vector<std::string>& rawValues)
 
 struct Value
 {
-    enum class Kind { String, Number, Bool, Null, Array, Object };
+    enum class Kind { String, Number, Bool, Null, Array, Object, FuncRef };
 
     Kind kind = Kind::Null;
     std::string scalar;

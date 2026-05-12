@@ -25,22 +25,23 @@ FXCPP_RESOURCE
         auto it = pending->find(oldId);
         std::string name = (it != pending->end()) ? it->second : "Unknown";
         if (it != pending->end()) pending->erase(it);
-        (*players)[source] = name;
-        fx::trace("%s (%s) has connected. Players Online: %zu\n", name.c_str(), extractId(source).c_str(), players->size());
+        std::string id = extractId(source);
+        (*players)[id] = name;
+        fx::trace("%s (%s) has connected. Players Online: %zu\n", name.c_str(), id.c_str(), players->size());
     });
 
     fx::on("playerDropped", [players](const std::string& source, fx::EventArgs args) {
         std::string reason = args.get<std::string>(0);
-        std::string name = players->count(source) ? (*players)[source] : "Unknown";
-        players->erase(source);
-        fx::trace("%s (%s) has disconnected (%s). Players Online: %zu\n", name.c_str(), extractId(source).c_str(), reason.c_str(), players->size());
+        std::string id = extractId(source);
+        std::string name = players->count(id) ? (*players)[id] : "Unknown";
+        players->erase(id);
+        fx::trace("%s (%s) has disconnected (%s). Players Online: %zu\n", name.c_str(), id.c_str(), reason.c_str(), players->size());
     });
 
     fx::on("chatMessage", [players](const std::string& source, fx::EventArgs args) {
         std::string name = args.size() > 1 ? args.get<std::string>(1) : "Unknown";
         std::string message = args.size() > 2 ? args.get<std::string>(2) : "";
         std::string id = extractId(source);
-        if (id.empty() && players->count(source)) id = extractId(source);
         fx::trace("%s (%s) has sent a chat message: %s\n", name.c_str(), id.c_str(), message.c_str());
     });
 
@@ -49,5 +50,24 @@ FXCPP_RESOURCE
         for (const auto& [src, name] : *players)
             fx::trace("  [%s] %s\n", extractId(src).c_str(), name.c_str());
         fx::trace("----------------------------\n");
+    });
+
+    fx::addExport("getPlayerCount", [players](fx::EventArgs) -> fx::json::Value {
+        fx::json::Value v;
+        v.kind = fx::json::Value::Kind::Number;
+        v.scalar = std::to_string(players->size());
+        return v;
+    });
+
+    fx::addExport("getPlayerName", [players](fx::EventArgs args) -> fx::json::Value {
+        std::string src = args.get<std::string>(0);
+        fx::json::Value v;
+        auto it = players->find(src);
+        if (it != players->end())
+        {
+            v.kind = fx::json::Value::Kind::String;
+            v.scalar = it->second;
+        }
+        return v;
     });
 }

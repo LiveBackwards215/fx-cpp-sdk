@@ -63,18 +63,14 @@ inline uintptr_t invokeRaw(uint64_t hash, TArgs&&... args)
 {
     auto* ctx = fx::detail::g_ctx;
     if (!ctx) return 0;
-
     fxNativeContext nctx{};
     nctx.nativeIdentifier = hash;
-
     size_t idx = 0;
     (detail::pushArg(nctx, idx++, std::forward<TArgs>(args)), ...);
     nctx.numArguments = static_cast<int>(idx);
     nctx.numResults = 1;
-
     PushEnvironment env(ctx->getRuntime());
     ctx->getHost()->InvokeNative(nctx);
-
     return nctx.arguments[0];
 }
 
