@@ -2,6 +2,7 @@
 
 #include "Context.h"
 #include "Refs.h"
+#include "Coroutine.h"
 
 #define FXCPP_WASM_EXPORT extern "C" __attribute__((visibility("default")))
 
@@ -10,6 +11,7 @@ FXCPP_WASM_EXPORT void fxcpp_free(void* ptr, uint32_t) { free(ptr); }
 
 FXCPP_WASM_EXPORT void fxcpp_tick()
 {
+    fxw_internal::resumeCoroutines();
     if (auto* c = fxw_internal::currentContext()) c->dispatchTick();
 }
 
@@ -21,6 +23,7 @@ FXCPP_WASM_EXPORT void fxcpp_on_event(const char* name, uint32_t nameLen, const 
 
 FXCPP_WASM_EXPORT void fxcpp_on_stop()
 {
+    fxw_internal::cleanupCoroutines();
     if (auto* c = fxw_internal::currentContext()) c->dispatchStop();
 }
 

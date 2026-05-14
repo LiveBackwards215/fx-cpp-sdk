@@ -93,4 +93,14 @@ Server
         fx::trace("[fx::addExport] %s\n", info.asStr("failed").c_str());
         fx::callExport("fwa", "SendChatMessage", {std::stoi(source), "^#f0a0e4[INFO] ^#ffffffHello from ^#f0a0e4C++^#ffffff!"});
     });
+
+    fx::createThread([]() -> fx::ScriptTask {
+        fx::trace("[fx::createThread] started\n");
+        for (int i = 1; i <= 5; i++)
+        {
+            co_await fx::Wait{2000};
+            fx::trace("[fx::createThread] tick %d (every 2s)\n", i);
+        }
+        fx::trace("[fx::createThread] done\n");
+    });
 }
