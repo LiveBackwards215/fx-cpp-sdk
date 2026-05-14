@@ -7,8 +7,8 @@ from collections import defaultdict
 
 CFX_URL = "https://runtime.fivem.net/doc/natives_cfx.json"
 GAME_URLS = {
-    "fivem": "https://runtime.fivem.net/doc/natives.json",
-    "redm": "https://runtime.fivem.net/doc/natives_rdr3.json",
+    "fivem": "https://raw.githubusercontent.com/alloc8or/gta5-nativedb-data/master/natives.json",
+    "redm": "https://raw.githubusercontent.com/alloc8or/rdr3-nativedb-data/master/natives.json",
 }
 
 PARAM_TYPE_MAP = {
@@ -187,6 +187,14 @@ def parse_cfx_natives(data: list | dict) -> dict[str, list[dict]]:
     return dict(by_ns)
 
 
+def normalize_native(native: dict, hash_key: str) -> dict:
+    if "hash" not in native:
+        native["hash"] = hash_key
+    if "results" not in native and "return_type" in native:
+        native["results"] = native["return_type"]
+    return native
+
+
 def parse_game_natives(data: dict) -> dict[str, list[dict]]:
     by_ns = defaultdict(list)
     for ns, natives in data.items():
@@ -194,7 +202,7 @@ def parse_game_natives(data: dict) -> dict[str, list[dict]]:
             continue
         for hash_key, native in natives.items():
             if isinstance(native, dict) and "name" in native:
-                by_ns[ns].append(native)
+                by_ns[ns].append(normalize_native(native, hash_key))
     return dict(by_ns)
 
 
