@@ -140,7 +140,7 @@ def generate_namespace_block(namespace: str, natives: list[dict]) -> tuple[str, 
 
 def fetch_json(url: str) -> any:
         print(f"Fetching {url}...")
-        req = urllib.request.Request(url, headers={"User-Agent": "citizen-scripting-cpp-code-gen"})
+        req = urllib.request.Request(url, headers={"User-Agent": "citizen-scripting-cpp-nativedb"})
         with urllib.request.urlopen(req, timeout=30) as resp:
                 return json.loads(resp.read())
 

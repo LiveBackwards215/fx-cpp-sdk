@@ -15,12 +15,10 @@ project "citizen-scripting-cpp"
                 "src/CppScriptRuntime.cpp",
                 "src/Component.cpp",
         }
-        includedirs { "." }
+        includedirs { ".", "include" }
         component()
-
         filter "configurations:Debug"
                 symbols "On"
                 optimize "Off"
-
         filter "configurations:Release"
                 optimize "On"

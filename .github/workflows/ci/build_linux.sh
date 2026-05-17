@@ -10,7 +10,7 @@ echo "Building wasmtime..."
 cargo build --release -p wasmtime-c-api --target "$MUSL_TARGET" --manifest-path vendor/wasmtime/Cargo.toml
 
 echo "Building runtime..."
-python3 tools/code-gen/build.py
+python3 tools/native_db.py
 premake5 gmake2
 make -C build config=release \
         CC="zig cc -target x86_64-linux-musl" \
@@ -18,7 +18,7 @@ make -C build config=release \
         -j"$(nproc)"
 
 echo "Compiling resource (wasm)..."
-tools/build tools/example/server.cpp
+tools/build/resources tools/example/server.cpp
 
 rm -f tools/example/server.wasm
 

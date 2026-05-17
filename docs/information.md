@@ -30,7 +30,7 @@ The runtime plugin (`libcitizen-scripting-cpp.so`) is loaded by FXServer and han
 
 - Runtime is **server-side** only, client-side is not yet supported.
 - Linux is the only supported platform (all contributions are accepted for Windows support).
-- WebAssembly resources cannot use C++ exceptions (`-fno-exceptions` is required).
+- Resources cannot use C++ exceptions (`-fno-exceptions` is required).
 - `IScriptStackWalkingRuntime` is no-op. C++ resources won't appear in cross-runtime stack traces from `FORMAT_STACK_TRACE`.
 - `IScriptProfiler` is not yet implemented. `profiler record` won't produce scope events from C++ resources.
 - RedM is untested.

@@ -36,10 +36,17 @@ Copy `build/bin/Release/libcitizen-scripting-cpp.so` next to your FXServer binar
 
 ### Compile a resource
 
-Use `tools/build`:
+To build resources you need the following dependencies:
+
+- [Clang](https://clang.llvm.org/) with `wasm32-wasip1` target support
+- [WASI sysroot](https://github.com/WebAssembly/wasi-sdk) – install `wasi-sdk` or `wasi-sysroot` package.
+
+> Build tool looks in `/usr/share/wasi-sysroot` and `/opt/wasi-sdk/share/wasi-sysroot`, or set `WASI_SYSROOT` explicitly.
+
+Then build with `tools/build/resources`:
 
 ```bash
-tools/build server.cpp
+tools/build/resources server.cpp
 ```
 
 This produces `server.wasm`.
@@ -50,17 +57,17 @@ This produces `server.wasm`.
 
 ```bash
 # FiveM (GTA5)
-python3 tools/code-gen/build.py
+python3 tools/native_db.py
 
 # RedM (RDR3)
-python3 tools/code-gen/build.py --game redm
+python3 tools/native_db.py --game redm
 ```
 
 ### Known issues
 
 - Resource fails to load with missing `fxcpp_init` export
 
-  Use `tools/build` or pass the correct `-Wl,--export=...` flags manually.
+  Use `tools/build/resources` or pass the correct `-Wl,--export=...` flags manually.
 
 - wasmtime-c-api build fails with a linker error
 
@@ -77,4 +84,4 @@ python3 tools/code-gen/build.py --game redm
 
 - `error: cannot use 'try' with exceptions disabled`
 
-  Resources require `-fno-exceptions`. `tools/build` sets this automatically.
+  Resources require `-fno-exceptions`. `tools/build/resources` sets this automatically.

@@ -3,7 +3,7 @@ set -euo pipefail
 
 SERVER_DIR="${FX_SERVER_DIR:?Set FX_SERVER_DIR to your cfx-server directory}"
 RESOURCE_DIR="${FX_RESOURCE_DIR:?Set FX_RESOURCE_DIR to your resource directory}"
-PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+PROJECT_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
 BUILD_DIR="$PROJECT_DIR/build"
 OUT_DIR="$BUILD_DIR/bin/Release"
 
@@ -11,7 +11,7 @@ cd "$PROJECT_DIR"
 
 rm -rf "$BUILD_DIR"
 
-python3 tools/code-gen/build.py
+python3 tools/native_db.py
 
 premake5 gmake2
 make -C "$BUILD_DIR" -f citizen-scripting-cpp.make config=release \
@@ -19,7 +19,7 @@ make -C "$BUILD_DIR" -f citizen-scripting-cpp.make config=release \
         CXX="zig c++ -target x86_64-linux-musl" \
         -j"$(nproc)"
 
-"$PROJECT_DIR/tools/build" "$PROJECT_DIR/tools/example/server.cpp"
+"$PROJECT_DIR/tools/build/resources" "$PROJECT_DIR/tools/example/server.cpp"
 mv "$PROJECT_DIR/tools/example/server.wasm" "$OUT_DIR/server.wasm"
 
 cp "$OUT_DIR/libcitizen-scripting-cpp.so" "$SERVER_DIR/"

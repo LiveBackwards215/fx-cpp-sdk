@@ -1,120 +1,45 @@
-#include "../include/Local.h"
+/*
+ * Originally from the CitizenFX project - http://citizen.re/
+ *
+ * Copyright (c) 2017-2020 the CitizenFX Collective
+ * Licensed under the GNU Lesser General Public License v2.0
+ * https://github.com/citizenfx/fivem/blob/master/code/components/citizen-scripting-lua/src/Component.cpp
+ */
 
-#include <cstdio>
-#include <vector>
+#include "../include/CppScriptRuntime.h"
 
-extern "C" intptr_t CoreFxFindFirstImpl(const guid_t& iid, guid_t* clsid);
-extern "C" int32_t CoreFxFindNextImpl(intptr_t handle, guid_t* clsid);
-extern "C" void CoreFxFindImplClose(intptr_t handle);
-extern "C" result_t CoreFxCreateObjectInstance(const guid_t& guid, const guid_t& iid, void** objectRef);
-extern "C" intptr_t fxFindFirstImpl(const guid_t& iid, guid_t* clsid)
+class EXPORTED_TYPE ComponentInstance : public OMComponentBase<Component>
 {
-        return CoreFxFindFirstImpl(iid, clsid);
-}
-extern "C" int32_t fxFindNextImpl(intptr_t handle, guid_t* clsid)
-{
-        return CoreFxFindNextImpl(handle, clsid);
-}
-extern "C" void fxFindImplClose(intptr_t handle)
-{
-        CoreFxFindImplClose(handle);
-}
-extern "C" result_t fxCreateObjectInstance(const guid_t& guid, const guid_t& iid, void** objectRef)
-{
-        return CoreFxCreateObjectInstance(guid, iid, objectRef);
-}
+public:
+        virtual bool Initialize();
 
-OMFactoryDef* OMFactoryDef::s_factories = nullptr;
-OMImplementsDef* OMImplementsDef::s_impls = nullptr;
+        virtual bool DoGameLoad(void* module);
 
-class OMComponent
-{
-    public:
-        virtual result_t CreateObjectInstance(const guid_t& guid, const guid_t& iid, void** outRef) = 0;
-        virtual std::vector<guid_t> GetImplementedClasses(const guid_t& iid) = 0;
+        virtual bool Shutdown();
 };
 
-class Component : public fwRefCountable
+bool ComponentInstance::Initialize()
 {
-    public:
-        virtual bool Initialize()
-        {
-                return true;
-        }
-        virtual void SetCommandLine(int, char*[])
-        {
-        }
-        virtual bool SetUserData(const std::string&)
-        {
-                return true;
-        }
-        virtual bool Shutdown()
-        {
-                return true;
-        }
-        virtual bool DoGameLoad(void*)
-        {
-                return true;
-        }
-        virtual bool IsA(uint32_t)
-        {
-                return false;
-        }
-        virtual void* As(uint32_t)
-        {
-                return nullptr;
-        }
-};
+        InitFunctionBase::RunAll();
 
-class ComponentInstance final : public Component, public OMComponent
+        return true;
+}
+
+bool ComponentInstance::DoGameLoad(void* module)
 {
-    public:
-        bool Initialize() override
-        {
-                return true;
-        }
-        bool Shutdown() override
-        {
-                return true;
-        }
-        bool IsA(uint32_t type) override
-        {
-                return type == HashString("OMComponent") || Component::IsA(type);
-        }
-        void* As(uint32_t type) override
-        {
-                if (type == HashString("OMComponent"))
-                        return static_cast<OMComponent*>(this);
-                return Component::As(type);
-        }
-        result_t CreateObjectInstance(const guid_t& guid, const guid_t& iid, void** outRef) override
-        {
-                guid_t match = fx::IsNullGuid(guid) ? iid : guid;
+        HookFunction::RunAll();
 
-                for (auto* f = OMFactoryDef::s_factories; f; f = f->next)
-                {
-                        if (f->guid == match)
-                        {
-                                fxIBase* base = f->factory();
-                                result_t res = base->QueryInterface(iid, outRef);
-                                base->Release();
-                                if (res != FX_E_NOINTERFACE)
-                                        return res;
-                        }
-                }
-                return FX_E_NOINTERFACE;
-        }
-        std::vector<guid_t> GetImplementedClasses(const guid_t& iid) override
-        {
-                std::vector<guid_t> out;
-                for (auto* e = OMImplementsDef::s_impls; e; e = e->next)
-                        if (e->iid == iid)
-                                out.push_back(e->clsid);
-                return out;
-        }
-};
+        return true;
+}
 
-extern "C" FXCPP_EXPORT Component* CreateComponent()
+bool ComponentInstance::Shutdown()
+{
+        return true;
+}
+
+extern "C" DLL_EXPORT Component* CreateComponent()
 {
         return new ComponentInstance();
 }
+
+OMComponentBaseImpl* OMComponentBaseImpl::ms_instance;
