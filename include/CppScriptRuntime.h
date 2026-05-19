@@ -388,7 +388,13 @@ struct Reader
                         v.scalar = str(n);
                         return v;
                 }
-                p += n;
+                if (n > static_cast<size_t>(end - p))
+                {
+                        error = true;
+                        p = end;
+                }
+                else
+                        p += n;
                 return { };
         }
         Value read(int d = 0)
@@ -534,6 +540,17 @@ struct Reader
                                         v.children.push_back(read(d + 1));
                                 return v;
                         }
+                        // fixext
+                        case 0xD4:
+                                return readExt(1);
+                        case 0xD5:
+                                return readExt(2);
+                        case 0xD6:
+                                return readExt(4);
+                        case 0xD7:
+                                return readExt(8);
+                        case 0xD8:
+                                return readExt(16);
                         // ext8/ext16/ext32
                         case 0xC7:
                                 return readExt(u8());

@@ -648,7 +648,7 @@ static wasm_trap_t* CbSpawnProcess(void* env, wasmtime_caller_t* caller, const w
                 results[0] = I32Val(-2);
                 return nullptr;
         }
-        if (!HasWasmPermission(rt->host(), "sv_wasmChildProcess", rt->resourceName()))
+        if (!rt->host() || !HasWasmPermission(rt->host(), "sv_wasmChildProcess", rt->resourceName()))
         {
                 LogError("Resource '%s' denied child_process permission. Add 'set sv_wasmChildProcess \"%s\"' to your server.cfg", rt->resourceName().c_str(), rt->resourceName().c_str());
                 results[0] = I32Val(-1);
@@ -760,7 +760,7 @@ static wasm_trap_t* CbCreateWorker(void* env, wasmtime_caller_t* caller, const w
                 results[0] = I32Val(-2);
                 return nullptr;
         }
-        if (!HasWasmPermission(rt->host(), "sv_wasmWorkerThreads", rt->resourceName()))
+        if (!rt->host() || !HasWasmPermission(rt->host(), "sv_wasmWorkerThreads", rt->resourceName()))
         {
                 LogError("Resource '%s' denied worker_threads permission. Add 'set sv_wasmWorkerThreads \"%s\"' to your server.cfg", rt->resourceName().c_str(), rt->resourceName().c_str());
                 results[0] = I32Val(-1);
@@ -918,7 +918,7 @@ static wasm_trap_t* CbPollWorker(void* env, wasmtime_caller_t* caller, const was
                 std::lock_guard<std::mutex> lk(state->mutex);
                 status = state->status;
                 if (status == CppScriptRuntime::WorkerState::Done)
-                        workerResult = state->result;
+                        workerResult = std::move(state->result);
         }
         if (status == CppScriptRuntime::WorkerState::Running)
         {
@@ -1433,6 +1433,7 @@ result_t OM_DECL CppScriptRuntime::Tick()
 {
         if (!m_hasTickFn)
                 return FX_S_OK;
+        refuelWasm();
         if (m_hasHasPendingWorkFn)
         {
                 wasmtime_val_t ret{ };
@@ -1441,7 +1442,6 @@ result_t OM_DECL CppScriptRuntime::Tick()
         }
         fx::PushEnvironment env(static_cast<IScriptRuntime*>(this));
         BoundaryGuard boundary(m_host.GetRef(), static_cast<int64_t>(nextBoundaryId()));
-        refuelWasm();
         if (!callVoid(m_fnTick) && m_host.GetRef())
         {
                 char buf[256];
