@@ -2355,7 +2355,8 @@ inline void resumeCoroutines()
         if (coros.empty())
                 return;
         auto now = std::chrono::steady_clock::now();
-        std::vector<int32_t> ready;
+        static std::vector<int32_t> ready;
+        ready.clear();
         for (auto& [id, entry] : coros)
                 if (now >= entry.resumeAt)
                         ready.push_back(id);
@@ -2730,6 +2731,7 @@ public:
         fx::OMPtr<IScriptHostWithManifest> m_manifestHost;
         void* m_parentObject = nullptr;
         int32_t m_instanceId = 0;
+        bool m_destroyed = false;
         std::string m_resourceName;
         std::unordered_map<int32_t, fx::RefCallback> m_refs;
         int32_t m_nextRefIdx = 1;

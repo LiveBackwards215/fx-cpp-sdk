@@ -960,6 +960,9 @@ result_t OM_DECL CppScriptRuntime::Create(IScriptHost* host)
 
 result_t OM_DECL CppScriptRuntime::Destroy()
 {
+        if (m_destroyed)
+                return FX_S_OK;
+        m_destroyed = true;
         if (m_bookmarkHost.GetRef())
         {
                 try
@@ -1082,7 +1085,8 @@ void CppScriptRuntime::wasmFree(uint32_t ptr, uint32_t size)
         if (!m_hasFreeFn || !m_store)
                 return;
         wasmtime_val_t args[2] = { I32Val(static_cast<int32_t>(ptr)), I32Val(static_cast<int32_t>(size)) };
-        WasmCall(m_store, m_fnFree, args, 2, nullptr, 0, m_resourceName.c_str(), "free trap");
+        if (!WasmCall(m_store, m_fnFree, args, 2, nullptr, 0, m_resourceName.c_str(), "free trap"))
+                LogWarning("wasmFree trapped in '%s' (ptr=%u, size=%u)", m_resourceName.c_str(), ptr, size);
 }
 
 bool CppScriptRuntime::callVoid(const wasmtime_func_t& fn)
@@ -1288,9 +1292,13 @@ void CppScriptRuntime::destroyWasm()
                         if (!done)
                                 std::this_thread::sleep_for(std::chrono::milliseconds(WORKER_SHUTDOWN_INTERVAL_MS));
                 }
-                if (!done)
-                        LogWarning("Worker %d in '%s' did not finish within %ds, blocking on join", id, m_resourceName.c_str(), (WORKER_SHUTDOWN_ATTEMPTS * WORKER_SHUTDOWN_INTERVAL_MS) / 1000);
-                w->thread.join();
+                if (done)
+                        w->thread.join();
+                else
+                {
+                        LogWarning("Worker %d in '%s' did not finish within %ds, detaching", id, m_resourceName.c_str(), (WORKER_SHUTDOWN_ATTEMPTS * WORKER_SHUTDOWN_INTERVAL_MS) / 1000);
+                        w->thread.detach();
+                }
         }
         m_workers.clear();
         m_wasmToHostBookmark.clear();
