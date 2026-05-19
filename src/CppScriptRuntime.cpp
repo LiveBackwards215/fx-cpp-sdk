@@ -771,7 +771,7 @@ static wasm_trap_t* CbCreateWorker(void* env, wasmtime_caller_t* caller, const w
                 {
                         auto cb = (strcmp(imp.name, "trace") == 0) ? CbWorkerTrace : CbWorkerStub;
                         auto* ft = MakeFuncType(imp.params, imp.results);
-                        wasmtime_linker_define_func(linker, "fxcpp", 5, imp.name, strlen(imp.name), ft, cb, nullptr, nullptr);
+                        wasmtime_linker_define_func(linker, "cfx", 3, imp.name, strlen(imp.name), ft, cb, nullptr, nullptr);
                         wasm_functype_delete(ft);
                 }
                 wasmtime_instance_t instance{ };
@@ -793,7 +793,7 @@ static wasm_trap_t* CbCreateWorker(void* env, wasmtime_caller_t* caller, const w
                 wasmtime_extern_t memExt{ };
                 bool hasMem = wasmtime_instance_export_get(storeCtx, &instance, "memory", 6, &memExt) && memExt.kind == WASMTIME_EXTERN_MEMORY;
                 wasmtime_extern_t allocExt{ };
-                bool hasAlloc = wasmtime_instance_export_get(storeCtx, &instance, "fxcpp_alloc", 11, &allocExt) && allocExt.kind == WASMTIME_EXTERN_FUNC;
+                bool hasAlloc = wasmtime_instance_export_get(storeCtx, &instance, "__cfx_alloc", 11, &allocExt) && allocExt.kind == WASMTIME_EXTERN_FUNC;
                 wasmtime_extern_t fnExt{ };
                 if (!wasmtime_instance_export_get(storeCtx, &instance, fnName.c_str(), fnName.size(), &fnExt) || fnExt.kind != WASMTIME_EXTERN_FUNC)
                 {
@@ -809,7 +809,7 @@ static wasm_trap_t* CbCreateWorker(void* env, wasmtime_caller_t* caller, const w
                 {
                         wasmtime_val_t allocArgs[1] = { I32Val(static_cast<int32_t>(inputData.size())) };
                         wasmtime_val_t allocResult[1]{ };
-                        if (WasmCall(store, allocExt.of.func, allocArgs, 1, allocResult, 1, "worker", "fxcpp_alloc"))
+                        if (WasmCall(store, allocExt.of.func, allocArgs, 1, allocResult, 1, "worker", "__cfx_alloc"))
                         {
                                 inputPtr = static_cast<uint32_t>(allocResult[0].of.i32);
                                 if (hasMem)
@@ -827,7 +827,7 @@ static wasm_trap_t* CbCreateWorker(void* env, wasmtime_caller_t* caller, const w
                 {
                         wasmtime_val_t allocArgs[1] = { I32Val(static_cast<int32_t>(resultBufSize)) };
                         wasmtime_val_t allocResult[1]{ };
-                        if (WasmCall(store, allocExt.of.func, allocArgs, 1, allocResult, 1, "worker", "fxcpp_alloc"))
+                        if (WasmCall(store, allocExt.of.func, allocArgs, 1, allocResult, 1, "worker", "__cfx_alloc"))
                                 resultPtr = static_cast<uint32_t>(allocResult[0].of.i32);
                 }
                 wasmtime_val_t callArgs[4] = {
@@ -1223,7 +1223,7 @@ void CppScriptRuntime::defineImports()
         for (const auto& imp : g_imports)
         {
                 auto* ft = MakeFuncType(imp.params, imp.results);
-                auto* err = wasmtime_linker_define_func(m_linker, "fxcpp", 5, imp.name, strlen(imp.name), ft, imp.hostCb, this, nullptr);
+                auto* err = wasmtime_linker_define_func(m_linker, "cfx", 3, imp.name, strlen(imp.name), ft, imp.hostCb, this, nullptr);
                 wasm_functype_delete(ft);
                 if (err)
                         LogError("failed to define import '%s': %s", imp.name, ExtractWasmError(err, nullptr).c_str());
@@ -1245,24 +1245,24 @@ bool CppScriptRuntime::resolveExports()
         };
         {
                 wasmtime_func_t initFn{ };
-                if (!get("fxcpp_init", initFn))
+                if (!get("__cfx_init", initFn))
                 {
-                        LogError("'%s' missing fxcpp_init export", m_resourceName.c_str());
+                        LogError("'%s' missing __cfx_init export", m_resourceName.c_str());
                         return false;
                 }
-                if (!WasmCall(m_store, initFn, nullptr, 0, nullptr, 0, m_resourceName.c_str(), "fxcpp_init trap"))
+                if (!WasmCall(m_store, initFn, nullptr, 0, nullptr, 0, m_resourceName.c_str(), "__cfx_init trap"))
                         return false;
         }
-        m_hasTickFn = get("fxcpp_tick", m_fnTick);
-        m_hasEventFn = get("fxcpp_on_event", m_fnEvent);
-        m_hasStopFn = get("fxcpp_on_stop", m_fnStop);
-        m_hasAllocFn = get("fxcpp_alloc", m_fnAlloc);
-        m_hasFreeFn = get("fxcpp_free", m_fnFree);
-        m_hasInvokeRefFn = get("fxcpp_invoke_ref", m_fnInvokeRef);
-        m_hasDuplicateRefFn = get("fxcpp_duplicate_ref", m_fnDuplicateRef);
-        m_hasRemoveRefFn = get("fxcpp_remove_ref", m_fnRemoveRef);
-        m_hasHasPendingWorkFn = get("fxcpp_has_pending_work", m_fnHasPendingWork);
-        m_hasTickBookmarksFn = get("fxcpp_tick_bookmarks", m_fnTickBookmarks);
+        m_hasTickFn = get("__cfx_on_tick", m_fnTick);
+        m_hasEventFn = get("__cfx_on_event", m_fnEvent);
+        m_hasStopFn = get("__cfx_on_stop", m_fnStop);
+        m_hasAllocFn = get("__cfx_alloc", m_fnAlloc);
+        m_hasFreeFn = get("__cfx_free", m_fnFree);
+        m_hasInvokeRefFn = get("__cfx_invoke_ref", m_fnInvokeRef);
+        m_hasDuplicateRefFn = get("__cfx_duplicate_ref", m_fnDuplicateRef);
+        m_hasRemoveRefFn = get("__cfx_remove_ref", m_fnRemoveRef);
+        m_hasHasPendingWorkFn = get("__cfx_has_pending_work", m_fnHasPendingWork);
+        m_hasTickBookmarksFn = get("__cfx_tick_bookmarks", m_fnTickBookmarks);
         wasmtime_extern_t memExt{ };
         if (wasmtime_instance_export_get(ctx, &m_instance, "memory", 6, &memExt) && memExt.kind == WASMTIME_EXTERN_MEMORY)
         {

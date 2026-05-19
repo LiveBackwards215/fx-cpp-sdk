@@ -62,7 +62,6 @@ inline bool operator<(const guid_t& a, const guid_t& b)
 }
 
 #define OM_DECL
-#define FXCPP_EXPORT __attribute__((visibility("default")))
 
 #define NS_IMETHOD_(rv) virtual rv OM_DECL
 #define NS_IMETHOD NS_IMETHOD_(result_t)

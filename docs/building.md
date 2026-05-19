@@ -65,7 +65,7 @@ python3 tools/native_db.py --game redm
 
 ### Known issues
 
-- Resource fails to load with missing `fxcpp_init` export
+- Resource fails to load with missing `__cfx_init` export
 
   Use `tools/build/resources` or pass the correct `-Wl,--export=...` flags manually.
 

@@ -11,7 +11,7 @@ It provides:
 
 The runtime plugin (`libcitizen-scripting-cpp.so`) is loaded by FXServer and handles the lifecycle:
 1. Server reads `fxmanifest.lua` -> sees `server_script 'server.wasm'`
-2. Runtime loads your module and calls `fxcpp_init`
+2. Runtime loads your module and calls `__cfx_init`
 3. `Server { }` block runs and it registers events, exports, timers, etc.
 4. Runtime dispatches ticks, events, and ref calls to your handlers
 5. On resource stop, `onStop` handlers run and everything is cleaned up

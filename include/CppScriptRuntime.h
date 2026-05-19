@@ -1215,26 +1215,26 @@ using HttpCallback = std::function<void(int statusCode, const std::string& body,
 }
 
 extern "C" {
-        __attribute__((import_module("fxcpp"), import_name("trace"))) void __fxcppTrace(const char* ptr, uint32_t len);
-        __attribute__((import_module("fxcpp"), import_name("invoke_native"))) void __fxcppInvokeNative(uint32_t ctx_ptr);
-        __attribute__((import_module("fxcpp"), import_name("copy_string_result"))) int32_t __fxcppCopyStringResult(uint32_t ctx_ptr, int32_t result_idx, char* buf, int32_t buf_max);
-        __attribute__((import_module("fxcpp"), import_name("emit_event"))) void __fxcppEmitEvent(const char* name, uint32_t name_len, const uint8_t* args, uint32_t args_len);
-        __attribute__((import_module("fxcpp"), import_name("emit_net_event"))) void __fxcppEmitNetEvent(const char* name, uint32_t name_len, int32_t target, const uint8_t* args, uint32_t args_len);
-        __attribute__((import_module("fxcpp"), import_name("cancel_event"))) void __fxcppCancelEvent();
-        __attribute__((import_module("fxcpp"), import_name("was_event_canceled"))) int32_t __fxcppWasEventCanceled();
-        __attribute__((import_module("fxcpp"), import_name("get_resource_metadata"))) int32_t __fxcppGetResourceMetadata(const char* key, uint32_t key_len, int32_t index, char* buf, int32_t buf_max);
-        __attribute__((import_module("fxcpp"), import_name("get_num_resource_metadata"))) int32_t __fxcppGetNumResourceMetadata(const char* key, uint32_t key_len);
-        __attribute__((import_module("fxcpp"), import_name("create_ref"))) int32_t __fxcppCreateRef(int32_t callback_id);
-        __attribute__((import_module("fxcpp"), import_name("canonicalize_ref"))) int32_t __fxcppCanonicalizeRef(int32_t ref_idx, char* buf, int32_t buf_max);
-        __attribute__((import_module("fxcpp"), import_name("remove_ref"))) void __fxcppRemoveRef(int32_t ref_idx);
-        __attribute__((import_module("fxcpp"), import_name("invoke_function_reference"))) void __fxcppInvokeFunctionReference(const char* ref_str, uint32_t ref_len, const char* args, uint32_t args_len, void* out);
-        __attribute__((import_module("fxcpp"), import_name("get_instance_id"))) int32_t __fxcppGetInstanceId();
-        __attribute__((import_module("fxcpp"), import_name("spawn_process"))) int32_t __fxcppSpawnProcess(const char* cmd, uint32_t cmd_len, char* out_buf, int32_t out_buf_max);
-        __attribute__((import_module("fxcpp"), import_name("get_last_spawn_exit_code"))) int32_t __fxcppGetLastSpawnExitCode();
-        __attribute__((import_module("fxcpp"), import_name("create_worker"))) int32_t __fxcppCreateWorker(const char* fn_name, uint32_t fn_name_len, const char* input, uint32_t input_len);
-        __attribute__((import_module("fxcpp"), import_name("poll_worker"))) int32_t __fxcppPollWorker(int32_t worker_id, char* out_buf, int32_t out_buf_max);
-        __attribute__((import_module("fxcpp"), import_name("schedule_bookmark"))) void __fxcppScheduleBookmark(int32_t bookmark_id, int32_t deadline_ms);
-        __attribute__((import_module("fxcpp"), import_name("is_manifest_version_v2_between"))) int32_t __fxcppIsManifestVersionV2Between(const char* lower, uint32_t lower_len, const char* upper, uint32_t upper_len);
+        __attribute__((import_module("cfx"), import_name("trace"))) void __cfxTrace(const char* ptr, uint32_t len);
+        __attribute__((import_module("cfx"), import_name("invoke_native"))) void __cfxInvokeNative(uint32_t ctx_ptr);
+        __attribute__((import_module("cfx"), import_name("copy_string_result"))) int32_t __cfxCopyStringResult(uint32_t ctx_ptr, int32_t result_idx, char* buf, int32_t buf_max);
+        __attribute__((import_module("cfx"), import_name("emit_event"))) void __cfxEmitEvent(const char* name, uint32_t name_len, const uint8_t* args, uint32_t args_len);
+        __attribute__((import_module("cfx"), import_name("emit_net_event"))) void __cfxEmitNetEvent(const char* name, uint32_t name_len, int32_t target, const uint8_t* args, uint32_t args_len);
+        __attribute__((import_module("cfx"), import_name("cancel_event"))) void __cfxCancelEvent();
+        __attribute__((import_module("cfx"), import_name("was_event_canceled"))) int32_t __cfxWasEventCanceled();
+        __attribute__((import_module("cfx"), import_name("get_resource_metadata"))) int32_t __cfxGetResourceMetadata(const char* key, uint32_t key_len, int32_t index, char* buf, int32_t buf_max);
+        __attribute__((import_module("cfx"), import_name("get_num_resource_metadata"))) int32_t __cfxGetNumResourceMetadata(const char* key, uint32_t key_len);
+        __attribute__((import_module("cfx"), import_name("create_ref"))) int32_t __cfxCreateRef(int32_t callback_id);
+        __attribute__((import_module("cfx"), import_name("canonicalize_ref"))) int32_t __cfxCanonicalizeRef(int32_t ref_idx, char* buf, int32_t buf_max);
+        __attribute__((import_module("cfx"), import_name("remove_ref"))) void __cfxRemoveRef(int32_t ref_idx);
+        __attribute__((import_module("cfx"), import_name("invoke_function_reference"))) void __cfxInvokeFunctionReference(const char* ref_str, uint32_t ref_len, const char* args, uint32_t args_len, void* out);
+        __attribute__((import_module("cfx"), import_name("get_instance_id"))) int32_t __cfxGetInstanceId();
+        __attribute__((import_module("cfx"), import_name("spawn_process"))) int32_t __cfxSpawnProcess(const char* cmd, uint32_t cmd_len, char* out_buf, int32_t out_buf_max);
+        __attribute__((import_module("cfx"), import_name("get_last_spawn_exit_code"))) int32_t __cfxGetLastSpawnExitCode();
+        __attribute__((import_module("cfx"), import_name("create_worker"))) int32_t __cfxCreateWorker(const char* fn_name, uint32_t fn_name_len, const char* input, uint32_t input_len);
+        __attribute__((import_module("cfx"), import_name("poll_worker"))) int32_t __cfxPollWorker(int32_t worker_id, char* out_buf, int32_t out_buf_max);
+        __attribute__((import_module("cfx"), import_name("schedule_bookmark"))) void __cfxScheduleBookmark(int32_t bookmark_id, int32_t deadline_ms);
+        __attribute__((import_module("cfx"), import_name("is_manifest_version_v2_between"))) int32_t __cfxIsManifestVersionV2Between(const char* lower, uint32_t lower_len, const char* upper, uint32_t upper_len);
 }
 
 namespace fxw_internal
@@ -1357,7 +1357,7 @@ struct Context
                 for (auto& entry : handlers)
                 {
                         safeInvoke([&] { entry.handler(srcStr, ea); }, resourceName.c_str(), eventCtx);
-                        if (__fxcppWasEventCanceled())
+                        if (__cfxWasEventCanceled())
                                 break;
                 }
         }
@@ -1401,22 +1401,22 @@ inline int32_t createRef(fxw_internal::RefCallbackFn cb)
                 return -1;
         callbacks[id] = std::move(cb);
         fxw_internal::refCounts()[id] = 1;
-        return __fxcppCreateRef(id);
+        return __cfxCreateRef(id);
 }
 
 inline std::string canonicalizeRef(int32_t refIdx)
 {
-        int32_t len = __fxcppCanonicalizeRef(refIdx, nullptr, 0);
+        int32_t len = __cfxCanonicalizeRef(refIdx, nullptr, 0);
         if (len <= 0)
                 return { };
         std::string out(static_cast<size_t>(len), '\0');
-        __fxcppCanonicalizeRef(refIdx, out.data(), len + 1);
+        __cfxCanonicalizeRef(refIdx, out.data(), len + 1);
         return out;
 }
 
 inline void removeRef(int32_t refIdx)
 {
-        __fxcppRemoveRef(refIdx);
+        __cfxRemoveRef(refIdx);
 }
 
 inline std::vector<uint8_t> invokeFunctionReference(const std::string& ref, const uint8_t* args, uint32_t argsLen)
@@ -1426,7 +1426,7 @@ inline std::vector<uint8_t> invokeFunctionReference(const std::string& ref, cons
                 uint32_t ptr;
                 uint32_t len;
         } out{ };
-        __fxcppInvokeFunctionReference(ref.c_str(), static_cast<uint32_t>(ref.size()), reinterpret_cast<const char*>(args), argsLen, &out);
+        __cfxInvokeFunctionReference(ref.c_str(), static_cast<uint32_t>(ref.size()), reinterpret_cast<const char*>(args), argsLen, &out);
         if (!out.ptr || !out.len)
                 return { };
         auto* data = reinterpret_cast<uint8_t*>(out.ptr);
@@ -1514,18 +1514,18 @@ inline NativeCtx invokeNative(uint64_t hash, std::initializer_list<NativeArg> ar
                         ctx.ptrMask |= (1u << i);
                 ++i;
         }
-        __fxcppInvokeNative(reinterpret_cast<uint32_t>(&ctx));
+        __cfxInvokeNative(reinterpret_cast<uint32_t>(&ctx));
         return ctx;
 }
 
 inline std::string getStringResult(NativeCtx& ctx, int32_t resultIdx)
 {
-        int32_t len = __fxcppCopyStringResult(
+        int32_t len = __cfxCopyStringResult(
         reinterpret_cast<uint32_t>(&ctx), resultIdx, nullptr, 0);
         if (len <= 0)
                 return { };
         std::string out(static_cast<size_t>(len), '\0');
-        __fxcppCopyStringResult(
+        __cfxCopyStringResult(
         reinterpret_cast<uint32_t>(&ctx), resultIdx, out.data(), len + 1);
         return out;
 }
@@ -1585,7 +1585,7 @@ inline NativeCtx invokeCtx(uint64_t hash, TArgs&&... args)
         ctx.numArgs = static_cast<uint32_t>(sizeof...(args));
         ctx.numResults = 3;
         detail::pushArgs(ctx, 0, std::forward<TArgs>(args)...);
-        __fxcppInvokeNative(reinterpret_cast<uint32_t>(&ctx));
+        __cfxInvokeNative(reinterpret_cast<uint32_t>(&ctx));
         return ctx;
 }
 
@@ -1610,7 +1610,7 @@ inline TResult invoke(uint64_t hash, TArgs&&... args)
                 ctx.numResults = 3;
                 ctx.resultPtrMask = 0x1;
                 detail::pushArgs(ctx, 0, std::forward<TArgs>(args)...);
-                __fxcppInvokeNative(reinterpret_cast<uint32_t>(&ctx));
+                __cfxInvokeNative(reinterpret_cast<uint32_t>(&ctx));
                 return getStringResult(ctx, 0);
         }
         else if constexpr (std::is_same_v<TResult, bool>)
@@ -1671,7 +1671,7 @@ inline int32_t on(const std::string& event, F&& handler)
                         ctx.numArgs = 1;
                         ctx.args[0] = reinterpret_cast<uint64_t>(event.c_str());
                         ctx.ptrMask = 1;
-                        __fxcppInvokeNative(reinterpret_cast<uint32_t>(&ctx));
+                        __cfxInvokeNative(reinterpret_cast<uint32_t>(&ctx));
                 }
                 return token;
         }
@@ -1719,7 +1719,7 @@ inline void emit(const std::string& event, TArgs&&... vals)
         fxw_internal::Writer w;
         w.arrayHeader(static_cast<uint32_t>(sizeof...(vals)));
         (fxw_internal::encodeOne(w, std::forward<TArgs>(vals)), ...);
-        __fxcppEmitEvent(event.c_str(), static_cast<uint32_t>(event.size()), w.buf.data(), static_cast<uint32_t>(w.buf.size()));
+        __cfxEmitEvent(event.c_str(), static_cast<uint32_t>(event.size()), w.buf.data(), static_cast<uint32_t>(w.buf.size()));
 }
 
 template<typename... TArgs>
@@ -1728,7 +1728,7 @@ inline void emitNet(const std::string& event, int target, TArgs&&... vals)
         fxw_internal::Writer w;
         w.arrayHeader(static_cast<uint32_t>(sizeof...(vals)));
         (fxw_internal::encodeOne(w, std::forward<TArgs>(vals)), ...);
-        __fxcppEmitNetEvent(event.c_str(), static_cast<uint32_t>(event.size()), target, w.buf.data(), static_cast<uint32_t>(w.buf.size()));
+        __cfxEmitNetEvent(event.c_str(), static_cast<uint32_t>(event.size()), target, w.buf.data(), static_cast<uint32_t>(w.buf.size()));
 }
 
 template<typename... TArgs>
@@ -1743,12 +1743,12 @@ inline void emitLatent(const std::string& event, int target, int bps, TArgs&&...
 
 inline void cancelEvent()
 {
-        __fxcppCancelEvent();
+        __cfxCancelEvent();
 }
 
 inline bool wasEventCanceled()
 {
-        return __fxcppWasEventCanceled() != 0;
+        return __cfxWasEventCanceled() != 0;
 }
 
 template<typename F>
@@ -1778,7 +1778,7 @@ inline void trace(const char* fmt, TArgs&&... args)
         if constexpr (sizeof...(args) == 0)
         {
                 if (fmt && fmt[0])
-                        __fxcppTrace(fmt, static_cast<uint32_t>(strlen(fmt)));
+                        __cfxTrace(fmt, static_cast<uint32_t>(strlen(fmt)));
         }
         else
         {
@@ -1787,14 +1787,14 @@ inline void trace(const char* fmt, TArgs&&... args)
                         return;
                 std::string buf(static_cast<size_t>(len), '\0');
                 snprintf(buf.data(), buf.size() + 1, fmt, std::forward<TArgs>(args)...);
-                __fxcppTrace(buf.data(), static_cast<uint32_t>(buf.size()));
+                __cfxTrace(buf.data(), static_cast<uint32_t>(buf.size()));
         }
 }
 
 inline void traceStr(const std::string& msg)
 {
         if (!msg.empty())
-                __fxcppTrace(msg.data(), static_cast<uint32_t>(msg.size()));
+                __cfxTrace(msg.data(), static_cast<uint32_t>(msg.size()));
 }
 
 inline void onTick(TickHandler h)
@@ -1811,22 +1811,22 @@ inline void onStop(StopHandler h)
 
 inline std::string getResourceMetadata(const std::string& key, int index = 0)
 {
-        int32_t len = __fxcppGetResourceMetadata(key.c_str(), static_cast<uint32_t>(key.size()), index, nullptr, 0);
+        int32_t len = __cfxGetResourceMetadata(key.c_str(), static_cast<uint32_t>(key.size()), index, nullptr, 0);
         if (len <= 0)
                 return { };
         std::string out(static_cast<size_t>(len), '\0');
-        __fxcppGetResourceMetadata(key.c_str(), static_cast<uint32_t>(key.size()), index, out.data(), len + 1);
+        __cfxGetResourceMetadata(key.c_str(), static_cast<uint32_t>(key.size()), index, out.data(), len + 1);
         return out;
 }
 
 inline int getNumResourceMetadata(const std::string& key)
 {
-        return __fxcppGetNumResourceMetadata(key.c_str(), static_cast<uint32_t>(key.size()));
+        return __cfxGetNumResourceMetadata(key.c_str(), static_cast<uint32_t>(key.size()));
 }
 
 inline bool isManifestVersionV2Between(const std::string& lower, const std::string& upper)
 {
-        return __fxcppIsManifestVersionV2Between(lower.c_str(), static_cast<uint32_t>(lower.size()), upper.c_str(), static_cast<uint32_t>(upper.size())) != 0;
+        return __cfxIsManifestVersionV2Between(lower.c_str(), static_cast<uint32_t>(lower.size()), upper.c_str(), static_cast<uint32_t>(upper.size())) != 0;
 }
 
 inline std::string getCurrentResourceName()
@@ -2074,7 +2074,7 @@ inline json::Value callExport(const std::string& resource, const std::string& na
         setterArr.children.push_back(std::move(setterVal));
         auto setterPayload = fxw_internal::encode(setterArr);
         std::string eventName = "__cfx_export_" + resource + "_" + name;
-        __fxcppEmitEvent(eventName.c_str(), static_cast<uint32_t>(eventName.size()), setterPayload.data(), static_cast<uint32_t>(setterPayload.size()));
+        __cfxEmitEvent(eventName.c_str(), static_cast<uint32_t>(eventName.size()), setterPayload.data(), static_cast<uint32_t>(setterPayload.size()));
         detail::removeRef(setterRef);
         if (capturedRef->empty())
                 return { };
@@ -2345,7 +2345,7 @@ inline void resumeCoroutineById(int32_t id)
                 int64_t waitMs = handle.promise().waitMs;
                 auto now = std::chrono::steady_clock::now();
                 it->second.resumeAt = (waitMs > 0) ? now + std::chrono::milliseconds(waitMs) : now;
-                __fxcppScheduleBookmark(id, static_cast<int32_t>(waitMs));
+                __cfxScheduleBookmark(id, static_cast<int32_t>(waitMs));
         }
 }
 
@@ -2416,26 +2416,26 @@ inline void createThread(F&& fn)
         if (id < 0)
                 return;
         coros[id] = { task.handle, std::move(stored), std::chrono::steady_clock::now() };
-        __fxcppScheduleBookmark(id, 0);
+        __cfxScheduleBookmark(id, 0);
 }
 
 inline ProcessResult spawnProcess(const std::string& command, int32_t maxOutput = 65536)
 {
         ProcessResult result{ };
         std::string buf(static_cast<size_t>(maxOutput), '\0');
-        result.status = __fxcppSpawnProcess(command.c_str(), static_cast<uint32_t>(command.size()), buf.data(), maxOutput);
+        result.status = __cfxSpawnProcess(command.c_str(), static_cast<uint32_t>(command.size()), buf.data(), maxOutput);
         if (result.status > 0)
                 buf.resize(static_cast<size_t>(result.status));
         else
                 buf.clear();
         result.output = std::move(buf);
-        result.exitCode = __fxcppGetLastSpawnExitCode();
+        result.exitCode = __cfxGetLastSpawnExitCode();
         return result;
 }
 
 }
 
-#define FXCPP_WORKER(name)                                                                                  \
+#define CFX_WORKER(name)                                                                                  \
         static int32_t name##_impl(const char* input, int32_t input_len, char* result, int32_t result_max); \
         extern "C" __attribute__((export_name(#name)))                                                      \
         int32_t                                                                                             \
@@ -2456,14 +2456,14 @@ struct WorkerResult
 
 inline int32_t createWorker(const std::string& fnName, const std::string& input = "")
 {
-        return __fxcppCreateWorker(fnName.c_str(), static_cast<uint32_t>(fnName.size()), input.c_str(), static_cast<uint32_t>(input.size()));
+        return __cfxCreateWorker(fnName.c_str(), static_cast<uint32_t>(fnName.size()), input.c_str(), static_cast<uint32_t>(input.size()));
 }
 
 inline WorkerResult pollWorker(int32_t workerId, int32_t maxOutput = 65536)
 {
         WorkerResult result{ };
         std::string buf(static_cast<size_t>(maxOutput), '\0');
-        int32_t raw = __fxcppPollWorker(workerId, buf.data(), maxOutput);
+        int32_t raw = __cfxPollWorker(workerId, buf.data(), maxOutput);
         if (raw > 0)
         {
                 result.status = raw;
@@ -2481,22 +2481,22 @@ inline WorkerResult pollWorker(int32_t workerId, int32_t maxOutput = 65536)
 
 }
 
-#define FXCPP_WASM_EXPORT(name) extern "C" __attribute__((export_name(#name)))
+#define CFX_WASM_EXPORT(name) extern "C" __attribute__((export_name(#name)))
 
-FXCPP_WASM_EXPORT(fxcpp_alloc)
-void* fxcppAlloc(uint32_t size)
+CFX_WASM_EXPORT(__cfx_alloc)
+void* __cfxAlloc(uint32_t size)
 {
         return malloc(size);
 }
 
-FXCPP_WASM_EXPORT(fxcpp_free)
-void fxcppFree(void* ptr, uint32_t)
+CFX_WASM_EXPORT(__cfx_free)
+void __cfxFree(void* ptr, uint32_t)
 {
         free(ptr);
 }
 
-FXCPP_WASM_EXPORT(fxcpp_has_pending_work)
-int32_t fxcppHasPendingWork()
+CFX_WASM_EXPORT(__cfx_has_pending_work)
+int32_t __cfxHasPendingWork()
 {
         if (!fxw_internal::coroutines().empty())
                 return 1;
@@ -2506,30 +2506,30 @@ int32_t fxcppHasPendingWork()
         return (!c->ticks.empty() || !c->timers.empty()) ? 1 : 0;
 }
 
-FXCPP_WASM_EXPORT(fxcpp_tick)
-void fxcppTick()
+CFX_WASM_EXPORT(__cfx_on_tick)
+void __cfxOnTick()
 {
         fxw_internal::resumeCoroutines();
         if (auto* c = fxw_internal::currentContext())
                 c->dispatchTick();
 }
 
-FXCPP_WASM_EXPORT(fxcpp_tick_bookmarks)
-void fxcppTickBookmarks(int32_t* bookmarks, int32_t count)
+CFX_WASM_EXPORT(__cfx_tick_bookmarks)
+void __cfxTickBookmarks(int32_t* bookmarks, int32_t count)
 {
         for (int32_t i = 0; i < count; ++i)
                 fxw_internal::resumeCoroutineById(bookmarks[i]);
 }
 
-FXCPP_WASM_EXPORT(fxcpp_on_event)
-void fxcppOnEvent(const char* name, uint32_t nameLen, const uint8_t* args, uint32_t argsLen, const char* src, uint32_t srcLen)
+CFX_WASM_EXPORT(__cfx_on_event)
+void __cfxOnEvent(const char* name, uint32_t nameLen, const uint8_t* args, uint32_t argsLen, const char* src, uint32_t srcLen)
 {
         if (auto* c = fxw_internal::currentContext())
                 c->dispatchEvent(name, nameLen, args, argsLen, src, srcLen);
 }
 
-FXCPP_WASM_EXPORT(fxcpp_on_stop)
-void fxcppOnStop()
+CFX_WASM_EXPORT(__cfx_on_stop)
+void __cfxOnStop()
 {
         fxw_internal::cleanupCoroutines();
         if (auto* c = fxw_internal::currentContext())
@@ -2544,8 +2544,8 @@ void fxcppOnStop()
         }
 }
 
-FXCPP_WASM_EXPORT(fxcpp_invoke_ref)
-int32_t fxcppInvokeRef(int32_t callback_id, const uint8_t* args_ptr, uint32_t args_len, uint8_t* result_ptr, uint32_t result_max)
+CFX_WASM_EXPORT(__cfx_invoke_ref)
+int32_t __cfxInvokeRef(int32_t callback_id, const uint8_t* args_ptr, uint32_t args_len, uint8_t* result_ptr, uint32_t result_max)
 {
         auto& callbacks = fxw_internal::refCallbacks();
         auto it = callbacks.find(callback_id);
@@ -2558,8 +2558,8 @@ int32_t fxcppInvokeRef(int32_t callback_id, const uint8_t* args_ptr, uint32_t ar
         return static_cast<int32_t>(result.size());
 }
 
-FXCPP_WASM_EXPORT(fxcpp_duplicate_ref)
-int32_t fxcppDuplicateRef(int32_t callback_id)
+CFX_WASM_EXPORT(__cfx_duplicate_ref)
+int32_t __cfxDuplicateRef(int32_t callback_id)
 {
         auto& counts = fxw_internal::refCounts();
         auto it = counts.find(callback_id);
@@ -2568,8 +2568,8 @@ int32_t fxcppDuplicateRef(int32_t callback_id)
         return callback_id;
 }
 
-FXCPP_WASM_EXPORT(fxcpp_remove_ref)
-void fxcppRemoveRef(int32_t callback_id)
+CFX_WASM_EXPORT(__cfx_remove_ref)
+void __cfxRemoveRef(int32_t callback_id)
 {
         auto& counts = fxw_internal::refCounts();
         auto it = counts.find(callback_id);
@@ -2582,26 +2582,26 @@ void fxcppRemoveRef(int32_t callback_id)
         }
 }
 
-#define FXCPP_WASM_ENTRY                                                                                                \
-        static void _fxcpp_wasm_body();                                                                                 \
-        FXCPP_WASM_EXPORT(fxcpp_init)                                                                                   \
-        void fxcpp_init()                                                                                               \
+#define CFX_WASM_ENTRY                                                                                                  \
+        static void _cfx_wasm_body();                                                                                   \
+        CFX_WASM_EXPORT(__cfx_init)                                                                                     \
+        void __cfx_init()                                                                                               \
         {                                                                                                               \
                 static fxw_internal::Context s_ctx;                                                                     \
                 fxw_internal::currentContext() = &s_ctx;                                                                \
                 {                                                                                                       \
                         static constexpr const char k[] = "resource_name";                                              \
-                        int32_t len = __fxcppGetResourceMetadata(k, sizeof(k) - 1, 0, nullptr, 0);                   \
+                        int32_t len = __cfxGetResourceMetadata(k, sizeof(k) - 1, 0, nullptr, 0);                        \
                         if (len > 0)                                                                                    \
                         {                                                                                               \
                                 s_ctx.resourceName.resize(static_cast<size_t>(len));                                    \
-                                __fxcppGetResourceMetadata(k, sizeof(k) - 1, 0, s_ctx.resourceName.data(), len + 1); \
+                                __cfxGetResourceMetadata(k, sizeof(k) - 1, 0, s_ctx.resourceName.data(), len + 1);      \
                         }                                                                                               \
                 }                                                                                                       \
-                _fxcpp_wasm_body();                                                                                     \
+                _cfx_wasm_body();                                                                                       \
         }                                                                                                               \
-        static void _fxcpp_wasm_body()
-#define Server FXCPP_WASM_ENTRY
+        static void _cfx_wasm_body()
+#define Server CFX_WASM_ENTRY
 
 #include "../src/DB.h"
 
